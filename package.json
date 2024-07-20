@@ -1,7 +1,7 @@
 {
   "name": "dyshez",
   "version": "0.1.0",
-  "private": true,
+  "public": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
