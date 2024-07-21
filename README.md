@@ -141,7 +141,3 @@ Si deseas contribuir a este proyecto, por favor haz un fork del repositorio y cr
 ## Licencia
 
 Este proyecto está licenciado bajo la Licencia MIT.
-
----
-
-Si necesitas ajustar algún detalle o agregar información adicional, no dudes en hacerlo.
