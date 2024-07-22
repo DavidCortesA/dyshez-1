@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Toaster, toast } from 'react-hot-toast';
+import { login } from '@/utils/actions';
 
 const LogIn = () => {
   const [email, setEmail] = useState('');
@@ -14,11 +15,12 @@ const LogIn = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (email === 'admin' && password === 'admin') {
+    try {
+      await login(email, password);
       toast.success('Inicio de sesión exitoso');
       router.push('/orders');
-    } else {
-      toast.error('Credenciales incorrectas');
+    } catch (error) {
+      toast.error(error.message);
     }
   }
 
