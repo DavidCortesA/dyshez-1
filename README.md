@@ -69,7 +69,7 @@ Para comenzar con el proyecto, sigue estos pasos:
 
 3. **Configura Tailwind CSS**:
     - Asegúrate de que `tailwind.config.js` y `postcss.config.js` estén configurados correctamente.
-    - Importa los estilos de Tailwind en `src/styles/globals.css`:
+    - Importa los estilos de Tailwind en `src/globals.css`:
 
     ```css
     @import 'tailwindcss/base';
