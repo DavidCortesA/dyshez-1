@@ -20,7 +20,7 @@ const LogIn = () => {
       toast.success('Inicio de sesión exitoso');
       router.push('/orders');
     } catch (error) {
-      toast.error(error.message);
+      toast.error("Inicio de sesión fallido");
     }
   }
 

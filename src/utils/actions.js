@@ -17,8 +17,7 @@ export async function login(email, password) {
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
-    toast.error(error.message)
-    console.log(error);
+    toast.error("Invalid credentials")
   }
 
   revalidatePath('/', 'orders')

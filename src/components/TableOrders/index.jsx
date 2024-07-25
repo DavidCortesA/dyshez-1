@@ -2,13 +2,22 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { Button } from '@nextui-org/react';
+import { getOrders } from '@/utils/actions';
 
-export const TableOrders = ({orders}) => {
-  const [data, setData] = useState(orders);
+export const TableOrders = () => {
+  const [data, setData] = useState([]); 
   const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [filter, setFilter] = useState('all');
+
+  useEffect(()=>{
+    const fetchData = async ()=>{
+      const orders = await getOrders();
+      setData(orders);
+    }
+    fetchData();
+  },[])
 
   useEffect(() => {
     if (sortConfig.key) {
@@ -50,6 +59,19 @@ export const TableOrders = ({orders}) => {
   const acceptedCount = data.filter(order => order.status === 'Accepted').length;
   const rejectedCount = data.filter(order => order.status === 'Rejected').length;
 
+  //Formate Date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  }
+
+  const formatTime = (timeString) => {
+    const time = new Date(timeString);
+    const options = { hour: 'numeric', minute: 'numeric', hour12: true }; 
+    return time.toLocaleTimeString('en-US', options);
+  }
+
   return (
     <div className="relative overflow-x-auto shadow-lg sm:rounded-lg mt-5">
       <div className="flex justify-start gap-4 items-center bg-white px-6 py-4 border-b dark:bg-gray-800 dark:border-gray-700">
@@ -79,7 +101,7 @@ export const TableOrders = ({orders}) => {
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-400 border-b-2">
           <tr>
-            {['orderId', 'customer', 'date', 'time', 'mode', 'total', 'paymentMethod'].map((key) => (
+            {['orderId', 'customer', 'date', 'time', 'mode', 'total', 'Payment Method'].map((key) => (
               <th scope="col" className="px-6 py-3" key={key}>
                 <div className="flex items-center">
                   <button onClick={() => handleSort(key)}>
@@ -99,8 +121,8 @@ export const TableOrders = ({orders}) => {
             <tr key={order.orderId} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 py-4">
               <td className="px-6 py-4">#{order.id}</td>
               <td className="px-6 py-4">{order.customer}</td>
-              <td className="px-6 py-4">{order.date}</td>
-              <td className="px-6 py-4">{order.time}</td>
+              <td className="px-6 py-4">{formatDate(order.created_at)}</td>
+              <td className="px-6 py-4">{formatTime(order.created_at)}</td>
               <td className="px-6 py-4">{order.mode}</td>
               <td className="px-6 py-4">${order.total.toFixed(2)}</td>
               <td className="px-6 py-4">{order.paymentMethod}</td>
