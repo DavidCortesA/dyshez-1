@@ -1,12 +1,18 @@
 {
   "name": "dyshez",
   "version": "0.1.0",
-  "public": true,
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
+  },
+  "author": "David Cortez",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidCortesA/dyshez-1.git"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
@@ -15,6 +21,7 @@
     "@supabase/supabase-js": "^2.44.4",
     "framer-motion": "^11.3.8",
     "next": "14.2.5",
+    "npm": "^10.8.2",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1"

@@ -1,36 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { faker } from '@faker-js/faker';
 import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { Button } from '@nextui-org/react';
 
-const generateFakeData = (numRows) => {
-  const data = [];
-  for (let i = 0; i < numRows; i++) {
-    data.push({
-      orderId: faker.datatype.number({ min: 10000000, max: 99999999 }),
-      customer: `${faker.name.firstName()} ${faker.name.lastName()}`,
-      date: faker.date.future().toLocaleDateString('en-GB'),
-      time: faker.date.future().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-      mode: faker.helpers.arrayElement(['Delivery', 'Pick Up']),
-      total: parseFloat(faker.commerce.price(10, 1000, 2)),
-      paymentMethod: faker.helpers.arrayElement(['Card', 'Cash', 'Stripe']),
-      status: faker.helpers.arrayElement(['Accepted', 'Rejected']),
-    });
-  }
-  return data;
-};
-
-export const TableOrders = () => {
-  const [data, setData] = useState([]);
+export const TableOrders = ({orders}) => {
+  const [data, setData] = useState(orders);
   const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [filter, setFilter] = useState('all');
-
-  useEffect(() => {
-    setData(generateFakeData(30));
-  }, []);
 
   useEffect(() => {
     if (sortConfig.key) {
@@ -119,7 +97,7 @@ export const TableOrders = () => {
         <tbody>
           {currentItems.map((order) => (
             <tr key={order.orderId} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 py-4">
-              <td className="px-6 py-4">#{order.orderId}</td>
+              <td className="px-6 py-4">#{order.id}</td>
               <td className="px-6 py-4">{order.customer}</td>
               <td className="px-6 py-4">{order.date}</td>
               <td className="px-6 py-4">{order.time}</td>

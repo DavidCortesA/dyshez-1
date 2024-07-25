@@ -1,11 +1,23 @@
 'use client'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import LogIn from "@/components/LogIn";
 import Register from "@/components/Register";
+import { getOrders } from "@/utils/actions";
 
 export default function Home() {
   const [loginTab, setLoginTab] = useState(true);
+  const [data, setData] = useState([]);
+  
+  useEffect(()=>{
+    const fetchData = async ()=>{
+      const orders = await getOrders();
+      setData(orders);
+    }
+    fetchData();
+  },[])
+
+  console.log(data);
 
   const handleLogin = () => {
     setLoginTab(true);

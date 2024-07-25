@@ -45,8 +45,7 @@ export async function signup(formData) {
 
 export async function getOrders() {
   const supabase = createClient()
-  const { data, error } = await supabase.from('orders').select('')
-  console.log(error);
+  const { data: orders, error } = await supabase.from('orders').select('')
 
-  return data;
+  return orders;
 }
