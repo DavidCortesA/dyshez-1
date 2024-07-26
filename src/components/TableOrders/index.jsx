@@ -1,3 +1,4 @@
+'use client'
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';

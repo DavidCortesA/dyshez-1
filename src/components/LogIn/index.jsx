@@ -1,5 +1,5 @@
 import { Button, Input } from '@nextui-org/react'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { AtSymbolIcon, LockClosedIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
@@ -11,6 +11,19 @@ const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const validateEmail = (email) => email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i)
+  const isInvalid = useMemo(() => {
+    if (email === "") return false;
+
+    return validateEmail(email) ? false : true;
+  }, [email]);
+
+  const validatePassword = (password) => password.match(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/);
+  const isInvalidPassword = useMemo(() => {
+    if (password === "") return false;
+
+    return validatePassword(password) ? false : true;
+  }, [password]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -36,6 +49,9 @@ const LogIn = () => {
           size='lg'
           radius='full'
           variant='bordered'
+          isRequired
+          isInvalid={isInvalid}
+          color={isInvalid ? "danger" : "success"}
           startContent={
             <AtSymbolIcon className='h-6 w-6 text-gray-500' />
           }
@@ -48,6 +64,9 @@ const LogIn = () => {
           className='bg-transparent'
           size='lg'
           radius='full'
+          isRequired
+          isInvalid={isInvalidPassword}
+          color={isInvalidPassword ? "danger" : "success"}
           variant='bordered'
           startContent={
             <LockClosedIcon className='h-6 w-6 text-gray-500' />

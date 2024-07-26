@@ -86,7 +86,7 @@ export const Sidebar = ({ children }) => {
         </div>
       </aside>
 
-      <div className="p-5 sm:ml-16">
+      <div className="p-5 sm:ml-20 h-screen">
         {children}
       </div>
     </div>
