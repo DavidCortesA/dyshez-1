@@ -25,22 +25,21 @@ export async function login(email, password) {
   redirect('/orders')
 }
 
-export async function signup(formData) {
+export async function signup(email, password) {
   const supabase = createClient()
 
   const data = {
-    email: formData.get('email'),
-    password: formData.get('password'),
+    email: email,
+    password: password
   }
 
   const { error } = await supabase.auth.signUp(data)
 
   if (error) {
-    toast.error(error.message) 
+    console.log();(error.message) 
   }
 
-  revalidatePath('/', 'orders')
-  redirect('/orders')
+  redirect('/')
 }
 
 export async function getOrders() {
@@ -53,26 +52,22 @@ export async function getOrders() {
 export async function getPictures() {
   const supabase = createClient()
   
-  const { data , error } = await supabase.storage.listBuckets();
+  const { data , error } = await supabase.storage.getBucket('Pictures');
 
   if (error) {
-    console.error(error);
-    return [];
+    toast.error(error.message);
   }
 
   return data;
 }
 
-export async function uploadPicture(file) {
+export async function postPicture(file) {
   const supabase = createClient();
-  const uniqueName = `${uuidv4()}-${file.name}`;
-  
-  const { data, error } = await supabase.storage.from('pictures').upload(uniqueName, file);
+  const { data, error } = await supabase.storage.from('Pictures').upload(uuidv4(), file);
 
-  if (error) {
-    console.error(error);
-    return null;
+  if(error){
+    toast.error(error.message)
   }
-
-  return supabase.storage.from('pictures').getPublicUrl(uniqueName).publicUrl;
+  
+  return data
 }
