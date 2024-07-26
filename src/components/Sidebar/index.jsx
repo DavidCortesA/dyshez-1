@@ -1,11 +1,23 @@
-import React, { useState } from 'react'
+'use client'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { CheckBadgeIcon, PhotoIcon, ShoppingBagIcon } from '@heroicons/react/24/outline'
+import { PhotoIcon, ShoppingBagIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export const Sidebar = ({ children }) => {
+  const router = useRouter();
   const [activeItem, setActiveItem] = useState('shoppingBag');
 
+  useEffect(() => {
+    // Update activeItem based on the current pathname
+    if (router.pathname === '/orders') {
+      setActiveItem('shoppingBag');
+    } else if (router.pathname === '/pictures') {
+      setActiveItem('picture');
+    }
+  }, [router.pathname]);
+  
   return (
     <div>
       <button
@@ -53,13 +65,13 @@ export const Sidebar = ({ children }) => {
                 <ShoppingBagIcon className={`w-6 h-6 ${activeItem === 'shoppingBag' ? 'text-[#E3026F]' : 'text-gray-500'} hover:text-[#E3026F]`} />
               </Link>
             </li>
-            <li className={`${activeItem === 'photo' ? 'border-l-4 border-[#E3026F] rounded pl-[.3rem]' : 'pl-2'}`}>
+            <li className={`${activeItem === 'picture' ? 'border-l-4 border-[#E3026F] rounded pl-[.3rem]' : 'pl-2'}`}>
               <Link
-                href="/orders"
+                href="/pictures"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                onClick={() => setActiveItem('photo')}
+                onClick={() => setActiveItem('picture')}
               >
-                <PhotoIcon className={`w-6 h-6 ${activeItem === 'photo' ? 'text-[#E3026F]' : 'text-gray-500'} hover:text-[#E3026F]`} />
+                <PhotoIcon className={`w-6 h-6 ${activeItem === 'picture' ? 'text-[#E3026F]' : 'text-gray-500'} hover:text-[#E3026F]`} />
               </Link>
             </li>
           </ul>
