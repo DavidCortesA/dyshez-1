@@ -5,16 +5,15 @@ import { PhotoIcon, ShoppingBagIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export const Sidebar = ({ children }) => {
+export const Sidebar = ({ children, activeItem }) => {
   const router = useRouter();
-  const [activeItem, setActiveItem] = useState('shoppingBag');
+  const [activePage, setactivePage] = useState(activeItem);
 
   useEffect(() => {
-    // Update activeItem based on the current pathname
     if (router.pathname === '/orders') {
-      setActiveItem('shoppingBag');
+      setactivePage('shoppingBag');
     } else if (router.pathname === '/pictures') {
-      setActiveItem('picture');
+      setactivePage('pictures');
     }
   }, [router.pathname]);
   
@@ -56,22 +55,22 @@ export const Sidebar = ({ children }) => {
             </span>
           </div>
           <ul className="space-y-2 font-medium mt-4">
-            <li className={`${activeItem === 'shoppingBag' ? 'border-l-4 border-[#E3026F] rounded pl-[.3rem]' : 'pl-2'}`}>
+            <li className={`${activePage === 'shoppingBag' ? 'border-l-4 border-[#E3026F] rounded pl-[.3rem]' : 'pl-2'}`}>
               <Link
                 href="/orders"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                onClick={() => setActiveItem('shoppingBag')}
+                onClick={() => setactivePage('shoppingBag')}
               >
-                <ShoppingBagIcon className={`w-6 h-6 ${activeItem === 'shoppingBag' ? 'text-[#E3026F]' : 'text-gray-500'} hover:text-[#E3026F]`} />
+                <ShoppingBagIcon className={`w-6 h-6 ${activePage === 'shoppingBag' ? 'text-[#E3026F]' : 'text-gray-500'} hover:text-[#E3026F]`} />
               </Link>
             </li>
-            <li className={`${activeItem === 'picture' ? 'border-l-4 border-[#E3026F] rounded pl-[.3rem]' : 'pl-2'}`}>
+            <li className={`${activePage === 'pictures' ? 'border-l-4 border-[#E3026F] rounded pl-[.3rem]' : 'pl-2'}`}>
               <Link
                 href="/pictures"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                onClick={() => setActiveItem('picture')}
+                onClick={() => setactivePage('pictures')}
               >
-                <PhotoIcon className={`w-6 h-6 ${activeItem === 'picture' ? 'text-[#E3026F]' : 'text-gray-500'} hover:text-[#E3026F]`} />
+                <PhotoIcon className={`w-6 h-6 ${activePage === 'pictures' ? 'text-[#E3026F]' : 'text-gray-500'} hover:text-[#E3026F]`} />
               </Link>
             </li>
           </ul>

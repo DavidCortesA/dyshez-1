@@ -1,14 +1,15 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
+import { metadata } from './picutes.metadata';
 
 import './pictures.css';
 
 import { Sidebar } from "@/components/Sidebar";
 import { GridPictures } from "@/components/GridPictures";
 import PreviewPictures from '@/components/PreviewPictures';
-
 import { getPictures } from '@/utils/actions';
+
 
 export default function Pictures(){
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -25,7 +26,7 @@ export default function Pictures(){
 
   return (
     <main className="flex h-screen flex-col bg-white">
-      <Sidebar>
+      <Sidebar activeItem="pictures" metadata={metadata}>
         <h1 className='font-bold text-3xl w-full'>Pictures</h1>
         <div className='w-full h-[90%] flex flex-row'>
           <GridPictures setSelectedFiles={setSelectedFiles} setPreviewFile={setPreviewFile} selectedFiles={selectedFiles} />

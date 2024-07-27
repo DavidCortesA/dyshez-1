@@ -8,7 +8,7 @@ const PreviewPictures = ({ previewFile }) => {
       {previewFile &&      
         <div className='flex flex-col gap-4 justify-center items-center'>
           <h1 className='text-lg font-semibold uppercase'>Preview 1:1</h1>
-          <div className='relative w-48 h-48 shadow-lg'>
+          <div className='relative w-28 h-28 shadow-lg'>
             <Image
               src={`https://ynodavbxiqjzghylygyn.supabase.co/storage/v1/object/public/pictures/${previewFile.name}`}
               alt="Preview 1:1"
@@ -20,7 +20,7 @@ const PreviewPictures = ({ previewFile }) => {
 
           {/* Preview 16:9 */}
           <h1 className='text-lg font-semibold uppercase'>Preview 16:9</h1>
-          <div className='relative w-96 h-48 shadow-lg'>
+          <div className='relative w-52 h-28 shadow-lg'>
             <Image
               src={`https://ynodavbxiqjzghylygyn.supabase.co/storage/v1/object/public/pictures/${previewFile.name}`}
               alt="Preview 16:9"
@@ -31,7 +31,7 @@ const PreviewPictures = ({ previewFile }) => {
           </div>
           {/* Preview 9:16 */}
           <h1 className='text-lg font-semibold uppercase'>Preview 9:16</h1>
-          <div className='relative w-48 h-96 shadow-lg'>
+          <div className='relative w-28 h-48 shadow-lg'>
             <Image
               src={`https://ynodavbxiqjzghylygyn.supabase.co/storage/v1/object/public/pictures/${previewFile.name}`}
               alt="Preview 9:16"

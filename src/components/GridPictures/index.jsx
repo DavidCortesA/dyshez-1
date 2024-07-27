@@ -4,6 +4,7 @@ import { Button } from '@nextui-org/react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { postPicture, getPictures, deletePicture } from '@/utils/actions'
+import { Toaster, toast } from 'react-hot-toast';
 
 export const GridPictures = ({ selectedFiles, setSelectedFiles, setPreviewFile }) => {
 
@@ -17,24 +18,31 @@ export const GridPictures = ({ selectedFiles, setSelectedFiles, setPreviewFile }
     fetchPictures();
   }, []);
 
-  // In your React component
   const handleFileChange = async (e) => {
     const files = Array.from(e.target.files);
     const imageFiles = files.filter((file) => file.type.startsWith('image/'));
-
+  
     const uploadedFiles = await Promise.all(
       imageFiles.map(async (file) => {
-        if (!(file instanceof File)) {
-          throw new Error('Invalid file object');
-        }
-        const url = await postPicture({ name: file.name, type: file.type, size: file.size }); // Extract properties
+        const base64Data = await convertFileToBase64(file); 
+        const url = await postPicture({ name: file.name, base64Data });
+        toast.success(`${file.name} cargada correctamente`);
         return { name: file.name, url };
       })
-    );    
-
+    );
+  
     setSelectedFiles((prevFiles) => [...prevFiles, ...uploadedFiles]);
+    setPictures((prevPictures) => [...prevPictures, ...uploadedFiles]);
   };
-
+  
+  const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
 
   const handleButtonClick = () => {
@@ -45,7 +53,9 @@ export const GridPictures = ({ selectedFiles, setSelectedFiles, setPreviewFile }
     try {
       const success = await deletePicture(fileName);
       if (success) {
-        console.log('Image deleted successfully!');
+        toast.success(`${fileName} eliminada correctamente`);
+        setSelectedFiles((prevFiles) => prevFiles.filter((file) => file.name !== fileName));
+        setPreviewFile(null)
       }
     } catch (error) {
       console.error('Error deleting image:', error);
@@ -58,6 +68,7 @@ export const GridPictures = ({ selectedFiles, setSelectedFiles, setPreviewFile }
 
   return (
     <div className="flex flex-row gap-4 flex-wrap justify-start items-start w-7/12 mt-6">
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="flex flex-row gap-4 flex-wrap justify-start items-start"> 
         <input
           id="fileInput"
@@ -74,14 +85,16 @@ export const GridPictures = ({ selectedFiles, setSelectedFiles, setPreviewFile }
           <PlusIcon className='w-6 h-6 text-gray-500'/>
         </Button>
         {selectedFiles && selectedFiles.map((file, index) => (
-          <div key={index} className="relative w-32 h-32 shadow-xl border-2 rounded group hover:border-[#E3026F]" onClick={() => handleSelectFile(file)}>
+          <div key={index} className="relative w-32 h-32 shadow-xl border-2 rounded group hover:border-[#E3026F]">
             <div className='w-10 h-10 text-red-500 cursor-pointer absolute inset-10 flex items-center justify-center hidden group-hover:block transition-opacity duration-300 bg-white rounded flex justify-center items-center p-1.5 border border-black'>
               <TrashIcon 
                 className="w-6 h-6 text-black" 
-                onClick={() => handleDeleteImage(index)} 
+                onClick={() => handleDeleteImage(file.name)} 
               />
             </div>
-            <Image src={`https://ynodavbxiqjzghylygyn.supabase.co/storage/v1/object/public/pictures/${file.name}`} alt={file.name} width={500} height={100} className="w-full h-full object-cover cursor-pointer" />
+            <div className='w-[7.75rem] h-[7.75rem]' onClick={() => handleSelectFile(file)}>
+              <Image src={`https://ynodavbxiqjzghylygyn.supabase.co/storage/v1/object/public/pictures/${file.name}`} alt={file.name} width={500} height={100} className="w-full h-full object-cover cursor-pointer" />
+            </div>
           </div>
         ))}
       </div>

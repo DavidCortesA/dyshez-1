@@ -14,7 +14,7 @@ export const metadata = {
 export default function Orders () {
   return (
     <main className="flex min-h-screen flex-col bg-white">
-      <Sidebar>
+      <Sidebar activeItem="shoppingBag">
         <h1 className='font-bold text-3xl'>Orders</h1>
         <TableOrders />
       </Sidebar>

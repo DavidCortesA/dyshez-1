@@ -2,8 +2,6 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { v4 as uuidv4 } from 'uuid'
-
 import { createClient } from './supabase/server'
 
 export async function login(email, password) {
@@ -31,17 +29,17 @@ export async function signup(userInfo) {
 
   const data = {
     email: email,
-    password: password // You'll need to get the password from the form
+    password: password 
   }
 
   const { error } = await supabase.auth.signUp(data)
 
   if (error) {
     console.error(error.message) 
-    return; // Stop execution if there's an error
+    return;
   }
 
-  const { data: user, error: profileError } = await supabase
+  const { data: users, error: profileError } = await supabase
     .from('users')
     .insert({
       name,
@@ -49,15 +47,12 @@ export async function signup(userInfo) {
       phone,
       celphone,
       webSite,
-      // ... other fields you want to store
     })
 
   if (profileError) {
     console.error(profileError.message)
-    return; // Stop execution if there's an error
+    return;
   }
-
-  // Redirect to a success page or the login page
   redirect('/')
 }
 
@@ -80,14 +75,16 @@ export async function getPictures() {
   return data;
 }
 
-export async function postPicture(fileData) {
+export async function postPicture({ name, base64Data }) {
   const supabase = createClient();
-  const { name, type, size } = fileData;
 
   try {
+    // Decode the base64 data
+    const buffer = Buffer.from(base64Data.split(',')[1], 'base64');
+
     const { data, error } = await supabase.storage
       .from('pictures')
-      .upload(name, new File([fileData], name, { type })); 
+      .upload(name, buffer, { contentType: 'image/jpeg' }); // Adjust contentType if needed
 
     if (error) {
       console.error('Error uploading file:', error);
@@ -96,12 +93,13 @@ export async function postPicture(fileData) {
 
     console.log(data);
 
-    return { name, url: data.Key };
+    return { name: name, url: data.Key };
   } catch (error) {
     console.error('Error uploading file:', error);
     throw error;
   }
 }
+
 
 export async function deletePicture(fileName) {
   const supabase = createClient();
@@ -109,14 +107,14 @@ export async function deletePicture(fileName) {
   try {
     const { error } = await supabase.storage
       .from('pictures')
-      .remove([fileName]); // Remove the file with the given fileName
+      .remove([fileName]);
 
     if (error) {
       console.error('Error deleting file:', error);
       throw error;
     }
 
-    return true; // Indicate successful deletion
+    return true;
   } catch (error) {
     console.error('Error deleting file:', error);
     throw error;

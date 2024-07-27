@@ -1,6 +1,5 @@
 import React, {useState, useMemo} from 'react'
-import {useRouter} from 'next/navigation'
-import {Button, Input, Checkbox} from '@nextui-org/react'
+import {Button, Input, Checkbox, user} from '@nextui-org/react'
 import {ArrowRightIcon} from '@heroicons/react/24/solid'
 import {
   DevicePhoneMobileIcon,
@@ -25,7 +24,7 @@ const Register = (props) => {
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const [showPassword, setShowPassword] = useState('');
-  const [userInfo, setUserInfo] = useState({}); 
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateEmail = (email) => email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
 
@@ -35,9 +34,19 @@ const Register = (props) => {
     return validateEmail(email) ? false : true;
   }, [email]);
 
+  const validatePassword = (password) => password.match(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/);
+
+  const isInvalidPassword = useMemo(() => {
+    if (password === "") return false;
+
+    return validatePassword(password) ? false : true;
+  }, [password]);
+
   const formComplete = name && lastName && phone && email && password && repeatPassword && (password === repeatPassword);
 
   const handleSubmit = async () => {
+    if(isSubmitting) return;
+    setIsSubmitting(true)
     if(name && lastName && phone && email && password && celphone && webSite) {
       const newUserInfo = {
         name,
@@ -45,10 +54,10 @@ const Register = (props) => {
         phone,
         email,
         celphone,
-        webSite
+        webSite,
+        password
       };
-      setUserInfo(newUserInfo);
-      signup(userInfo)
+      signup(newUserInfo)
       toast.success('Registro exitoso')
       setTimeout(()=>{
         props.setLoginTab(true)
@@ -56,6 +65,7 @@ const Register = (props) => {
     } else {
       toast.error('Faltan datos por llenar')
     }
+    setIsSubmitting(false)
   }
 
   const handleShowPassword = () => {
@@ -157,6 +167,8 @@ const Register = (props) => {
             placeholder='Contraseña'
             className='bg-transparent'
             size='lg'
+            isInvalidPassword={isInvalidPassword}
+            color={isInvalidPassword ? "danger" : "success"}
             variant='bordered'
             startContent={
               <LockClosedIcon className='h-6 w-6 text-gray-500' />
@@ -177,6 +189,8 @@ const Register = (props) => {
             className='bg-transparent'
             size='lg'
             variant='bordered'
+            isInvalidPassword={isInvalidPassword}
+            color={(isInvalidPassword || password !== repeatPassword) ? "danger" : "success"}
             startContent={
               <LockClosedIcon className='h-6 w-6 text-gray-500' />
             }
@@ -194,7 +208,7 @@ const Register = (props) => {
         <Checkbox size='lg' color='secondary'>
           Acepto los términos y condiciones
         </Checkbox>
-        <Button radius='full' variant='solid' size='lg' className='mt-8 bg-[#E3026F] text-white text-lg font-normal py-5 px-8' isDisabled={!formComplete} onClick={handleSubmit} >Crear cuenta <ArrowRightIcon className='h-5 w-5 text-white font-bold' /></Button>
+        <Button radius='full' variant='solid' size='lg' className='mt-8 bg-[#E3026F] text-white text-lg font-normal py-5 px-8' isDisabled={isSubmitting} onClick={handleSubmit} >{isSubmitting ? 'Registrando...' : 'Crear cuenta'} <ArrowRightIcon className='h-5 w-5 text-white font-bold' /></Button>
         <p className="text-gray-500 text-sm my-6">Si ya tienes un restaurante en Dyshez y quieres agregar una <span className='font-semibold'>nueva sucursal</span>, conoce cómo hacerlo</p>
       </div>
     </div>
