@@ -23,8 +23,6 @@ export default function Pictures(){
     fetchPictures();
   }, []);
 
-  console.log(selectedFiles);
-
   return (
     <main className="flex h-screen flex-col bg-white">
       <Sidebar>

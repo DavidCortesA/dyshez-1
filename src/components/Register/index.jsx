@@ -13,6 +13,7 @@ import {
   EyeSlashIcon
 } from '@heroicons/react/24/outline';
 import { Toaster, toast } from 'react-hot-toast';
+import { signup } from '@/utils/actions';
 
 const Register = (props) => {
   const [name, setName] = useState('');
@@ -24,6 +25,7 @@ const Register = (props) => {
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const [showPassword, setShowPassword] = useState('');
+  const [userInfo, setUserInfo] = useState({}); 
 
   const validateEmail = (email) => email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
 
@@ -36,7 +38,17 @@ const Register = (props) => {
   const formComplete = name && lastName && phone && email && password && repeatPassword && (password === repeatPassword);
 
   const handleSubmit = async () => {
-    if(formComplete && isInvalid) {
+    if(name && lastName && phone && email && password && celphone && webSite) {
+      const newUserInfo = {
+        name,
+        lastName,
+        phone,
+        email,
+        celphone,
+        webSite
+      };
+      setUserInfo(newUserInfo);
+      signup(userInfo)
       toast.success('Registro exitoso')
       setTimeout(()=>{
         props.setLoginTab(true)
